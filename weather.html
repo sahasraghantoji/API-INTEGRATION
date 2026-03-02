@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Forecast</title>
+
+<style>
+body {
+    background-color: slategray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: rgb(27, 214, 83);
+}
+
+.container {
+    border: 2px solid black;
+    padding: 20px;
+    text-align: center;
+    background-color: #222;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Weather Forecast</h1>
+
+    <input type="text" placeholder="Enter the City name"
+           oninput="getWeatherInfo(this.value)">
+
+    <div class="details">
+        Enter the city name to get the weather forecast
+    </div>
+</div>
+
+<script>
+const detailsDiv = document.querySelector('.details');
+const APIkey = '3becb1759da057bd3b63a18a7d85d605';
+
+async function getWeatherInfo(cityName) {
+    if (cityName.length < 2) return;
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APIkey}&units=metric`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("City not found");
+
+        const info = await response.json();
+
+        detailsDiv.innerHTML = `
+            <b>City:</b> ${info.name}<br>
+            <b>Temperature:</b> ${info.main.temp} °C<br>
+            <b>Min Temp:</b> ${info.main.temp_min} °C<br>
+            <b>Max Temp:</b> ${info.main.temp_max} °C<br>
+            <b>Pressure:</b> ${info.main.pressure} hPa<br>
+            <b>Humidity:</b> ${info.main.humidity} %
+        `;
+    } catch (error) {
+        detailsDiv.innerHTML = "City not found ❌";
+    }
+}
+</script>
+
+</body>
+</html>
